@@ -2,5 +2,6 @@
 #ignoring the driver files to my graphics card for Linux
 fglrx*
 #ignoring week(NUM) folders and Sample folder
-week*
-Sample*
+week2
+week3
+Sample-OpenGL-Programs
