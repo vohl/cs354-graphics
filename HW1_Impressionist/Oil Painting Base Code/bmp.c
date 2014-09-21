@@ -81,6 +81,7 @@ ImageLoad(char *filename, Image *image) {
         return -1;
     }
     
+    //Why is this arithemetic operation here? R, G, B?
     for (i=0;i<size;i+=3) {
         temp = image->data[i];
         image->data[i] = image->data[i+2];

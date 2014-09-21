@@ -1,3 +1,6 @@
 #Gitignore file for every thing related to 354 graphics class/classprojects/soloProjects/etc
 #ignoring the driver files to my graphics card for Linux
 fglrx*
+#ignoring week(NUM) folders and Sample folder
+week*
+Sample*
