@@ -1,0 +1,4 @@
+I created 4 different viewports that and frew the same object inside all four frames reseting the
+Depth_Buffer_Bit before each viewport. I utilized the animateScenefunction from the source file rotateObject
+to rotate the image being copied into every viewport. Than using the glLookAt function I changed where
+the camera was pointing at for each viewport. 
