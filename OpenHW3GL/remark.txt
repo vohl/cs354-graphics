@@ -1,3 +1,0 @@
-Quaternion's are used in shaders for OpenGL/glut in order to rotate the 3D image through multiplaction. 
-In the display method we check if the mouse had moved an then multiplied the quaternion 
-accordingly in order move the 3d figure.

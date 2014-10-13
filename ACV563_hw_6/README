@@ -1,0 +1,11 @@
+gcc dda.c -framework OpenGL -framework -GLUT -o dda
+./dda
+gcc bresenham.c -framework OpenGL -framework -GLUT -o bres
+./bres
+g++ floodFill.cpp -framework OpenGL -framework -GLUT -o flood
+./flood
+gcc floodFill.c -framework OpenGL -framework -GLUT -o flood2
+./flood2
+
+floodFill2.c is implemented with 8 neighbors, but can't mimic the same outcome like floodFill.cpp. Attempted several times, but the diagnol neighbors were never selected such that a pixel outside the line/border 
+was painted.
