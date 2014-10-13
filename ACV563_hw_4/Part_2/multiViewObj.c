@@ -1,33 +1,22 @@
 #include <math.h>
 #include <stdlib.h>
-
 #ifdef __APPLE__  // include Mac OS X verions of headers
-	#include <OpenGL/OpenGL.h>
-	#include <GLUT/glut.h>
+#  include <OpenGL/OpenGL.h>
+#  include <GLUT/glut.h>
 #else // non-Mac OS X operating systems
-	#include <GL/glew.h>
-	#include <GL/freeglut.h>
-	#include <GL/freeglut_ext.h>
-#endif 
+#  include <GL/glew.h>
+#  include <GL/freeglut.h>
+#  include <GL/freeglut_ext.h>
+#endif  // __APPLE__
 
-#ifdef _WIN32
-	#include <windows.h>
-#else
-	#include <sys/time.h>
-#endif
+#include <sys/time.h>
 
-#ifdef _WIN32
-	static DWORD last_idle_time;
-#else
-	static struct timeval last_idle_time;
-#endif
+static struct timeval last_idle_time;
 
-static double x;
-int WinW, WinH;
+double x;
 
 void init(void);
 void display(void);
-void reshape(GLsizei width, GLsizei height);
 void animateScene(void);
 
 int main(int argc, char** argv){
@@ -38,7 +27,6 @@ int main(int argc, char** argv){
 	glutCreateWindow(argv[0]);
 	init();
 	glutDisplayFunc(display);
-	glutReshapeFunc(reshape);
 	glutIdleFunc(animateScene);
 	glutMainLoop();
 	return 0;
@@ -50,13 +38,9 @@ void init(){
 }
 
 void display(){
-	int w2, h2;
-
-	w2 = WinW >> 1;
-	h2 = WinH >> 1;
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glViewport(0, 0, w2, h2);
+	glViewport(0, 0, 266, 266);
 	glPushMatrix();
 		glRotatef(x, 1.0, 0.0, 0.0);
 		glColor3f(1.0, 1.0, 1.0);
@@ -64,13 +48,12 @@ void display(){
 	glPopMatrix();
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(30.0, WinW / WinH, 1.0, 30.0);
+	gluPerspective(30.0, 1.0, 1.0, 30.0);
 	gluLookAt(5.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	glClear(GL_DEPTH_BUFFER_BIT);
-	glViewport(w2, 0, w2, h2);
+	glViewport(266, 0, 266, 266);
 	glPushMatrix();
 		glRotatef(x, 1.0, 0.0, 0.0);
 		glColor3f(1.0, 1.0, 1.0);
@@ -78,14 +61,12 @@ void display(){
 	glPopMatrix();
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(30.0, WinW / WinH, 1.0, 30.0);
+	gluPerspective(30.0, 1.0, 1.0, 30.0);
 	gluLookAt(0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0);
-
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	glClear(GL_DEPTH_BUFFER_BIT);
-	glViewport(w2, h2, w2, h2);
+	glViewport(266, 266, 266, 266);
 	glPushMatrix();
 		glRotatef(x, 1.0, 0.0, 0.0);
 		glColor3f(1.0, 1.0, 1.0);
@@ -93,13 +74,12 @@ void display(){
 	glPopMatrix();
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(30.0, WinW / WinH, 1.0, 30.0);
+	gluPerspective(30.0, 1.0, 1.0, 30.0);
 	gluLookAt(0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	glClear(GL_DEPTH_BUFFER_BIT);
-	glViewport(0, h2, w2, h2);
+	glViewport(0, 266, 266, 266);
 	glPushMatrix();
 		glRotatef(x, 1.0, 0.0, 0.0);
 		glColor3f(1.0, 1.0, 1.0);
@@ -107,7 +87,7 @@ void display(){
 	glPopMatrix();
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(30.0, WinW / WinH, 1.0, 30.0);
+	gluPerspective(30.0, 1.0, 1.0, 30.0);
 	gluLookAt(5.0, 0.0, 5.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -116,27 +96,17 @@ void display(){
 	glutSwapBuffers();
 }
 
-void reshape(GLsizei width, GLsizei height){
-	WinW = width;
-	WinH = height;
-}
-
-
 void animateScene(){
 	float dt;
 
-	#ifdef _WIN32
-		DWORD time_now;
-    	time_now = GetTickCount();
-    	dt = (float) (time_now - last_idle_time) / 1000.0;
-	#else
-		struct timeval time_now;
-		gettimeofday(&time_now, NULL);
-		dt = (float)(time_now.tv_sec - last_idle_time.tv_sec) + 1.0e-6*(time_now.tv_sec - last_idle_time.tv_sec);
-	#endif
-
-	x+=0.1;
-	last_idle_time = time_now;
-
-	glutPostRedisplay();
+    // Figure out time elapsed since last call to idle function
+    struct timeval time_now;
+    gettimeofday(&time_now, NULL);
+    dt = (float)(time_now.tv_sec  - last_idle_time.tv_sec) + 1.0e-6*(time_now.tv_usec - last_idle_time.tv_usec);
+    // Animate the scene by Increment 2 degrees each call
+    x+=2;
+    // Save time_now for next time
+    last_idle_time = time_now;
+    // Force redraw
+    glutPostRedisplay();
 }
